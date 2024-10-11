@@ -30,4 +30,67 @@ Cette commande nous crée un fichier par défaut :
     
      src/DataFixtures/AppFixtures.php
 
-On va commencer à insérer des `users`  
+On va commencer à insérer un `user`  
+```php
+<?php
+
+namespace App\DataFixtures;
+
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+# on va récupérer notre entité user
+use App\Entity\User;
+
+class AppFixtures extends Fixture
+{
+    public function load(ObjectManager $manager): void
+    {
+        # Instantiation d'un user
+        $user = new User();
+        $user->setUsername('admin');
+        $user->setUserMail("admin@hotmail.com");
+        $user->setRoles(['ROLE_ADMIN', 'ROLE_REDAC','ROLE_MODERATOR']);
+        $user->setPassword('admin');
+        $user->setUserActive(true);
+        $user->setUserRealName('The Admin !');
+
+        # Utilisation du $manager pour mettre le User en mémoire
+         $manager->persist($user);
+
+        # envoie à la base de donnée (commit)
+        $manager->flush();
+    }
+}
+
+```
+Pour l'insérer dans la DB, on peut utiliser
+
+    php bin/console doctrine:fixtures:load
+
+ou
+
+    php bin/console d:f:l
+
+** Ceci écrase la DB ! **, Pour éviter, vous pouvez ajouter :
+
+    php bin/console d:f:l --append
+
+### Hachage des mots de passe
+
+Ici notre mot de passe n'est pas crypté et seul notre admin est disponible
+On va importer le hasher de mot de passe
+```php
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+```
+
+### On souhaite avoir ces utilisateurs
+
+- admin -> admin -> [ ROLE_ADMIN, ROLE_REDAC, ROLE_MODERATOR ]
+- redac1 -> redac1 -> [ROLE_REDAC]
+- redac2 -> redac2 -> [ROLE_REDAC]
+- redac3 -> redac3 -> [ROLE_REDAC]
+- redac4 -> redac4 -> [ROLE_REDAC]
+- redac5 -> redac5 -> [ROLE_REDAC]
+- moderator -> moderator -> [ROLE_MODERATOR]
+-
+-
