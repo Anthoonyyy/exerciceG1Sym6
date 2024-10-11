@@ -24,4 +24,10 @@ https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html
 
 ## Installation
 
-    composer require --dev orm-fixtures
+     composer require --dev orm-fixtures
+
+Cette commande nous crée un fichier par défaut :
+    
+     src/DataFixtures/AppFixtures.php
+
+On va commencer à insérer des `users`  
