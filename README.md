@@ -12,3 +12,16 @@ Vouz devez pouvoir vous connecter avec un `User` (avec mot de passe crypté) au 
 Créez une administration en back-end,
 
 Mais surtout un site (+-) fonctionnel en front-end
+
+
+## Les fixtures
+
+Ce sont des des données générés pour remplir nos base de donnés en `dev`
+
+Voir la documentation: 
+
+https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html
+
+## Installation
+
+    composer require --dev orm-fixtures
