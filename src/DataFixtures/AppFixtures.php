@@ -8,6 +8,8 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 # on va récupérer notre entité User
 use App\Entity\User;
+# Chargement de Faker et création alias nommé faker
+use Faker\Factory as Faker;
 
 class AppFixtures extends Fixture
 {
@@ -70,6 +72,33 @@ class AppFixtures extends Fixture
             # User en mémoire
             $manager->persist($user);
         }
+        # instantiation de faker en français
+        $faker = Faker::create('fr_FR');
+
+        # Instanciation entre 20 et 40 users sans rôles
+        $hasard = mt_rand(20,40);
+        for($i = 1; $i <= $hasard; $i++){
+            $user = new User();
+            # nom d'utilisateur au hasard commençant par user-1234
+            $username = $faker->numerify('user-####');
+            $user->setUsername($username);
+            # création d'un mail au hasard
+            $mail = $faker->email();
+            $user->setUserMail($mail);
+            $user->setRoles(['ROLE_USER']);
+            # transformation du nom en mit de passe (pour les tests)
+            $pwdHash = $this->passwordHasher->hashPassword($user, $username);
+            $user->setPassword($pwdHash);
+            # on va activer 1 user sur 3
+            $randActive = mt_rand(0,2);
+            $user->setUserActive($randActive);
+            # création d'un 'vrai' nom en fr
+            $realName = $faker->name();
+            $user->setUserRealName($realName);
+
+            $manager->persist($user);
+        }
+
 
         # envoie à la base de donnée (commit)
         $manager->flush();
